@@ -5,7 +5,7 @@ services:
     image: redis:7-alpine
     command: redis-server
     ports:
-      - "6379:6388"
+      - "6380:6379"
     environment:
       - REDIS_REPLICATION_MODE=master
     healthcheck:
@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_DB: laudspeaker
     ports:
-      - "5432:5499"
+      - "5433:5432"
     restart: unless-stopped
     networks:
       - laudspeaker_default
@@ -53,15 +53,12 @@ services:
       - PGBOUNCER_RESERVE_POOL_SIZE=0
       - PGBOUNCER_IGNORE_STARTUP_PARAMETERS=lock_timeout,statement_timeout,idle_in_transaction_session_timeout
     ports:
-      - "6432:6431"
+      - "6433:6432"
     depends_on:
       - postgres
     networks:
       - laudspeaker_default
 
-  # Ensure the following settings are set
-  # date_time_input_format: 'best_effort'
-  # output_format_json_array_of_rows: 1
   clickhouse:
     hostname: clickhouse
     container_name: clickhouse
@@ -73,8 +70,8 @@ services:
       timeout: 2s
       retries: 20
     ports:
-      - "8123:8123"
-      - "9000:9000"
+      - "8124:8123"
+      - "9001:9000"
     networks:
       - laudspeaker_default
     configs:
@@ -102,9 +99,9 @@ services:
     command:
       - rabbitmq-server
     ports:
-      - "5672:5679"
-      - "1883:1882"
-      - "15672:15679"
+      - "5673:5672"
+      - "1884:1883"
+      - "15673:15672"
     container_name: rabbitmq
     networks:
       - laudspeaker_default
@@ -113,8 +110,8 @@ services:
     image: quay.io/minio/minio
     command: "server /data --console-address :9123"
     ports:
-      - "9123:9123"
-      - "9001:9000"
+      - "9124:9123"
+      - "9002:9000"
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s
@@ -133,7 +130,7 @@ services:
     image: ${LAUDSPEAKER_IMAGE:-laudspeaker/laudspeaker:latest}
     container_name: laudspeaker-web
     ports:
-      - "8080:8080"
+      - "8081:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:8080"]
       interval: 5s
@@ -204,13 +201,14 @@ services:
       - ./local-env/env-docker-compose
     networks:
       - laudspeaker_default
+
   redis-gui:
     container_name: redis-gui
     image: redis/redisinsight:latest
     profiles:
       - gui
     ports:
-      - 8091:5540
+      - "8092:5540"
     depends_on:
       redis:
         condition: service_healthy
