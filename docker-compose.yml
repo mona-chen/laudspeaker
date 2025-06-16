@@ -5,7 +5,7 @@ services:
     image: redis:7-alpine
     command: redis-server
     ports:
-      - "6399:6379"
+      - "6379:6388"
     environment:
       - REDIS_REPLICATION_MODE=master
     healthcheck:
@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_DB: laudspeaker
     ports:
-      - "5432:5432"
+      - "5432:5499"
     restart: unless-stopped
     networks:
       - laudspeaker_default
@@ -53,7 +53,7 @@ services:
       - PGBOUNCER_RESERVE_POOL_SIZE=0
       - PGBOUNCER_IGNORE_STARTUP_PARAMETERS=lock_timeout,statement_timeout,idle_in_transaction_session_timeout
     ports:
-      - "6458:6432"
+      - "6432:6431"
     depends_on:
       - postgres
     networks:
