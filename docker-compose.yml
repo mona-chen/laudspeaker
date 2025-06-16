@@ -102,9 +102,9 @@ services:
     command:
       - rabbitmq-server
     ports:
-      - "5672:5672"
-      - "1883:1883"
-      - "15672:15672"
+      - "5672:5679"
+      - "1883:1882"
+      - "15672:15679"
     container_name: rabbitmq
     networks:
       - laudspeaker_default
